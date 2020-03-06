@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JQuery Tip Calculator</title>
+    <link rel="stylesheet" type="text/css" href="tipcalc.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            // Fade the calculator
+            $('div').hide().fadeIn("slow");
+
+            // Hover Text title
+            $("h4").attr('title', "Don't tip poorly!");
+
+            // Reservation hover text
+            $("#resbox").attr('title', "Please enter your party's name");
+
+            // Change color of input boxes by clicking in and out
+            $("input").focusin(function() {
+                $(this).css("background-color", "#FFFDDF");
+            });
+            $("input").focusout(function() {
+                $(this).css("background-color", "#D3D3D3");
+            });
+            $("#serviceQual").focusin(function() {
+                $(this).css("background-color", "#FFFDDF");
+            });
+            $("#serviceQual").focusout(function() {
+                $(this).css("background-color", "#D3D3D3");
+            });
+
+            // Reset values upon clicking in resbox input field
+            $('#resbox').click(function() {
+                $("#resbox").val("");
+                $("#billamt").val("");
+                $("#serviceQual").val(0);
+                $("#peopleamt").val("");
+                $("#myTipTotal").css("display", "none");
+            });
+
+            // Collect entered values
+            $("button").click(function() {
+                var billamt = $("#billamt").val();
+                var serviceQual = $("#serviceQual").val();
+                var peopleamt = $("#peopleamt").val();
+                var resbox = $("#resbox").val();
+
+                if (resbox == "") {
+                    alert("Please enter your party's name");
+                    return;
+                }
+
+                if (billamt == "") {
+                    alert("Please enter a number");
+                    return;
+                }
+
+                if (serviceQual == null) {
+                    alert("Please select a percentage");
+                    return;
+                }
+
+                if (peopleamt <= 1) {
+                    alert("Total must be more than 1 person");
+                    return;
+                }
+
+                // convert chosen quality to percentage
+                serviceQual = (serviceQual * .01);
+
+                // calculate tip
+                var tiptotal = (billamt * serviceQual) / (peopleamt);
+
+                // round to two decimal places
+                tiptotal = Math.round(tiptotal * 100) / 100;
+
+                // convert to two digits after decimal place
+                tiptotal = tiptotal.toFixed(2);
+
+                // display tip total
+                $("#myTipTotal").css("display", "block");
+                $("#myTipTotal").html("Each person's total tip is $" + tiptotal);
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+    <div id="container">
+        <h4>Tip Calculator</h4>
+
+        <form>
+
+            <div class="reservation">
+                <p>Reservation Name</p>
+                <p><input id="resbox" type="text"></p>
+            </div>
+
+            <p>How much was your bill?</p>
+            <p class="dollarSign">$</p>
+            <input type="number" id="billamt" placeholder="Bill Amount">
+
+            <p>How was your service?</p>
+            <select id="serviceQual">
+                <option disabled selected value="0">--Choose an option--</option>
+                <option value="30">30% - Outstanding</option>
+                <option value="20">20% - Good</option>
+                <option value="15">15% - OK</option>
+                <option value="10">10% - Poor</option>
+            </select>
+
+        </form>
+
+        <p>How many people are sharing the bill?</p>
+        <input type="number" id="peopleamt" placeholder="Number of People">&nbsp; &nbsp; People (>1)
+
+        <button type="button">Calculate!</button>
+        <br>
+        <p id="myTipTotal"></p>
+
+    </div>
+
+</body>
+
+</html>
